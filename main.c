@@ -33,7 +33,7 @@ int main(void) {
 	}
 	
 	// Change working directory
-	if ((chdir("/")) < 0) {
+	if ((chdir("/etc/lifeline")) < 0) {
 		// Log failure
 		exit(EXIT_FAILURE);
 	}
@@ -44,20 +44,20 @@ int main(void) {
 	close(STDERR_FILENO);
 	
 	// Daemon-specific initialization
-	if (access("daemon.lock", F_OK) == -1) {
+	if (access("/var/lock/lifeline", F_OK) == -1) {
 		int i, e;
 		char ch[2];
 		FILE * lock;
 		FILE * log;
-		lock = fopen("daemon.lock","w");
+		lock = fopen("/var/lock/lifeline","w");
 		if (lock!=NULL) {
-			fputs("This will keep the daemon on a single instance.\n",lock);
+			fputs("This daemon is currently running.\n",lock);
 			fclose(lock);
 			while (1) {
 				i++;
 				if (i > 20) { break; }
 				sprintf(ch,"%d",i);
-				log = fopen("daemon.log","a");
+				log = fopen("/var/log/lifeline.log","a");
 				if (log!=NULL) {
 					fputs("Iteration: ",log);
 					fputs(ch,log);
@@ -66,9 +66,9 @@ int main(void) {
 				}
 				sleep(10);
 			}
-			e = remove("daemon.lock");
+			e = remove("/var/lock/lifeline");
 			if ( e > 0 ) {
-				log = fopen("daemon.log","a");
+				log = fopen("/var/log/lifeline.log","a");
 				fputs("Error: Unable to delete log file\n",log);
 				fclose(log);
 			}

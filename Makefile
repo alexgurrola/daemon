@@ -3,10 +3,10 @@ CFLAGS=-g -O2
 OBJECTS=main.o
 
 all : $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -o main
+	$(CC) $(CFLAGS) $(OBJECTS) -o bin/lifeline
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c $<
 	
 clean:
-	rm -f main *.o
+	rm -f bin/lifeline *.o
